@@ -573,160 +573,241 @@
         </filter>
     </svg>
 
-    <div id="login-screen"
-        style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:1000; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-        <div class="cellulose-card" style="width:100%; max-width:400px; text-align:center;">
-            <div class="logo" style="margin:0 auto 20px auto; width:64px; height:64px;"></div>
-            <h2 style="margin-bottom:10px; text-transform:uppercase; letter-spacing:2px;">Nexus Access</h2>
-            <p style="color:var(--text-mono); font-size:0.8rem; margin-bottom:30px;">SECURE ADMIN TERMINAL</p>
+    <aside>
+        <div class="logo"></div>
+        <nav style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="nav-item active" onclick="navigate('dashboard')" title="Dashboard">
+                <i data-lucide="hexagon" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('all_orders')" title="Orders">
+                <i data-lucide="list" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('users')" title="Users">
+                <i data-lucide="users" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('add_product')" title="Products">
+                <i data-lucide="package" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('add_address')" title="Locations">
+                <i data-lucide="map-pin" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('schedule')" title="Schedule">
+                <i data-lucide="calendar" width="20"></i>
+            </div>
+            <div class="nav-item" onclick="navigate('support')" title="Support">
+                <i data-lucide="message-circle" width="20"></i>
+            </div>
+        </nav>
+    </aside>
 
-            <form id="login-form" onsubmit="handleLogin(event)">
-                <div style="margin-bottom:15px; text-align:left;">
-                    <label>Admin ID</label>
-                    <input type="email" id="login-email" required placeholder="admin@nexus.com"
-                        style="background:rgba(0,0,0,0.5);">
-                </div>
-                <div style="margin-bottom:25px; text-align:left;">
-                    <label>Passkey</label>
-                    <input type="password" id="login-password" required placeholder="••••••••"
-                        style="background:rgba(0,0,0,0.5);">
-                </div>
-                <div id="login-error"
-                    style="color:var(--color-danger); font-size:0.8rem; margin-bottom:15px; display:none;"></div>
-                <button type="submit" class="btn-primary" style="width:100%;">AUTHENTICATE</button>
-            </form>
+    <main>
+        <div class="header reveal">
+            <div>
+                <p style="font-family:'JetBrains Mono'; font-size: 0.9rem; color: var(--accent); margin-bottom: 10px;">
+                    SYSTEM STATUS: NOMINAL</p>
+                <h1 id="page-title">Core Architecture</h1>
+            </div>
+            <div class="mono-stats">
+                NEXUS ADMIN V2.0<br>
+                UPTIME: 99.9%<br>
+                USER: ADMIN_01
+            </div>
         </div>
-    </div>
 
-    <!-- Protected Content (Hidden by default) -->
-    <div id="app-content" style="display:none; width:100%; height:100%; display:flex;">
-        <aside>
-            <div class="logo"></div>
-            <nav style="display: flex; flex-direction: column; gap: 10px;">
-                <div class="nav-item active" onclick="navigate('dashboard')" title="Dashboard">
-                    <i data-lucide="hexagon" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('all_orders')" title="Orders">
-                    <i data-lucide="list" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('users')" title="Users">
-                    <i data-lucide="users" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('add_product')" title="Products">
-                    <i data-lucide="package" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('add_address')" title="Locations">
-                    <i data-lucide="map-pin" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('schedule')" title="Schedule">
-                    <i data-lucide="calendar" width="20"></i>
-                </div>
-                <div class="nav-item" onclick="navigate('support')" title="Support">
-                    <i data-lucide="message-circle" width="20"></i>
-                </div>
-            </nav>
-        </aside>
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard" class="dashboard-grid reveal delay-1">
+            <div class="cellulose-card small-pane">
+                <span class="card-label">Total Revenue</span>
+                <div class="card-value" id="stat-revenue">₹0</div>
+                <div style="font-family:'JetBrains Mono'; color: var(--text-mono); font-size: 0.75rem;">Aggregated
+                    Global Sales</div>
+            </div>
 
-        <main>
-            <div class="header reveal">
-                <div>
-                    <p
-                        style="font-family:'JetBrains Mono'; font-size: 0.9rem; color: var(--accent); margin-bottom: 10px;">
-                        SYSTEM STATUS: ONLINE</p>
-                    <h1 id="page-title">Core Architecture</h1>
-                </div>
-                <div class="mono-stats">
-                    NEXUS ADMIN V2.1<br>
-                    SECURE SESSION<br>
-                    <a href="#" onclick="handleLogout()"
-                        style="color:var(--color-danger); text-decoration:none; border-bottom:1px dotted var(--color-danger);">TERMINATE
-                        SESSION</a>
+            <div class="cellulose-card small-pane delay-1">
+                <span class="card-label">Active Users</span>
+                <div class="card-value" id="stat-users">0</div>
+                <div style="font-family:'JetBrains Mono'; color: #00ff88; font-size: 0.75rem;">+12.4% Growth</div>
+            </div>
+
+            <div class="cellulose-card small-pane delay-2">
+                <span class="card-label">Pending Orders</span>
+                <div class="card-value" id="stat-pending">0</div>
+                <div style="font-family:'JetBrains Mono'; color: var(--color-warning); font-size: 0.75rem;">Action
+                    Required</div>
+            </div>
+
+            <div class="cellulose-card large-pane" style="grid-row: span 2;">
+                <span class="card-label">Recent Transactions</span>
+                <div class="overflow-x: auto">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dashboard-txns"></tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- DASHBOARD VIEW -->
-            <div id="view-dashboard" class="dashboard-grid reveal delay-1">
-                <div class="cellulose-card small-pane">
-                    <span class="card-label">Total Revenue</span>
-                    <div class="card-value" id="stat-revenue">₹0</div>
-                    <div style="font-family:'JetBrains Mono'; color: var(--text-mono); font-size: 0.75rem;">Aggregated
-                        Global Sales</div>
-                </div>
-
-                <div class="cellulose-card small-pane delay-1">
-                    <span class="card-label">Active Users</span>
-                    <div class="card-value" id="stat-users">0</div>
-                    <div style="font-family:'JetBrains Mono'; color: #00ff88; font-size: 0.75rem;">+12.4% Growth</div>
-                </div>
-
-                <div class="cellulose-card small-pane delay-2">
-                    <span class="card-label">Pending Orders</span>
-                    <div class="card-value" id="stat-pending">0</div>
-                    <div style="font-family:'JetBrains Mono'; color: var(--color-warning); font-size: 0.75rem;">Action
-                        Required</div>
-                </div>
-
-                <div class="cellulose-card large-pane" style="grid-row: span 2;">
-                    <span class="card-label">Recent Transactions</span>
-                    <div class="overflow-x: auto">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Items</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dashboard-txns"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="cellulose-card small-pane delay-3">
-                    <span class="card-label">Analytics</span>
-                    <div style="height: 150px; position:relative;">
-                        <canvas id="miniRevenueChart"></canvas>
-                    </div>
-                </div>
-                <div class="cellulose-card small-pane delay-3">
-                    <span class="card-label">Order Volume</span>
-                    <div style="height: 150px; position:relative;">
-                        <canvas id="miniVolumeChart"></canvas>
-                    </div>
+            <div class="cellulose-card small-pane delay-3">
+                <span class="card-label">Analytics</span>
+                <div style="height: 150px; position:relative;">
+                    <canvas id="miniRevenueChart"></canvas>
                 </div>
             </div>
+            <div class="cellulose-card small-pane delay-3">
+                <span class="card-label">Order Volume</span>
+                <div style="height: 150px; position:relative;">
+                    <canvas id="miniVolumeChart"></canvas>
+                </div>
+            </div>
+        </div>
 
-            <!-- ORDERS VIEW -->
-            <div id="view-orders" class="hidden reveal">
+        <!-- ORDERS VIEW -->
+        <div id="view-orders" class="hidden reveal">
+            <div class="cellulose-card full-width">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap: 20px;">
+                    <span class="card-label">Order Registry</span>
+                    <div style="display:flex; gap:15px; align-items:center; flex:1; justify-content:flex-end;">
+                        <!-- Search Box -->
+                        <div style="position:relative; flex:0 1 300px;">
+                            <input type="text" id="order-search" placeholder="Search by Order ID..."
+                                oninput="applyOrderFilters()"
+                                style="width:100%; padding:8px 12px 8px 35px; font-size:0.8rem; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:4px;">
+                            <i data-lucide="search"
+                                style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:16px; color:var(--text-mono); pointer-events:none;"></i>
+                        </div>
+
+                        <!-- Filter Dropdown -->
+                        <div
+                            style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
+                            FILTER:
+                            <select id="order-filter" onchange="applyOrderFilters()"
+                                style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
+                                <option value="all">ALL ORDERS</option>
+                                <option value="pick-later">PICK LATER</option>
+                                <option value="delivery-later">DELIVERY LATER</option>
+                                <option value="aborted">ABORTED</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Address</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Protocol</th>
+                            <th>Dtl</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- USERS VIEW -->
+        <div id="view-users" class="hidden reveal">
+            <div class="cellulose-card full-width">
+                <span class="card-label">User Database</span>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Avatar</th>
+                            <th>Identity</th>
+                            <th>Contact</th>
+                            <th>Location</th>
+                            <th>LTV Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PRODUCTS VIEW -->
+        <div id="view-products" class="hidden reveal">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+                <button onclick="openProductModal()" class="btn-primary">
+                    <i data-lucide="plus" style="vertical-align:middle; width:16px;"></i> Initiate New Product
+                </button>
+            </div>
+            <div class="cellulose-card full-width">
+                <span class="card-label">Product Matrix</span>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Img</th>
+                            <th>Designation</th>
+                            <th>Class</th>
+                            <th>Pricing (Iron/Wash/Dry)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-list-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ADDRESS VIEW -->
+        <div id="view-address" class="hidden reveal">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
+                <button onclick="openAddressModal()" class="btn-primary">
+                    <i data-lucide="plus" style="vertical-align:middle; width:16px;"></i> Add Sector
+                </button>
+            </div>
+            <div class="cellulose-card full-width">
+                <span class="card-label">Service Sectors</span>
+                <div id="address-list-container"
+                    style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- SCHEDULE VIEW -->
+        <div id="view-schedule" class="hidden reveal">
+            <!-- Tab Navigation -->
+            <div
+                style="display:flex; gap:15px; margin-bottom:30px; border-bottom:1px solid var(--border); padding-bottom:10px;">
+                <button id="tab-pickup-today" onclick="switchScheduleTab('pickup-today')"
+                    class="schedule-tab active-tab">
+                    <i data-lucide="package-check" style="width:16px; vertical-align:middle;"></i>
+                    TODAY'S PICKUP
+                </button>
+                <button id="tab-delivery-today" onclick="switchScheduleTab('delivery-today')" class="schedule-tab">
+                    <i data-lucide="truck" style="width:16px; vertical-align:middle;"></i>
+                    TODAY'S DELIVERY
+                </button>
+                <button id="tab-delivery-tomorrow" onclick="switchScheduleTab('delivery-tomorrow')"
+                    class="schedule-tab">
+                    <i data-lucide="calendar-clock" style="width:16px; vertical-align:middle;"></i>
+                    TOMORROW'S DELIVERY
+                </button>
+            </div>
+
+            <!-- Schedule Content -->
+            <div id="schedule-content-pickup-today" class="schedule-content">
                 <div class="cellulose-card full-width">
-                    <div
-                        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap: 20px;">
-                        <span class="card-label">Order Registry</span>
-                        <div style="display:flex; gap:15px; align-items:center; flex:1; justify-content:flex-end;">
-                            <!-- Search Box -->
-                            <div style="position:relative; flex:0 1 300px;">
-                                <input type="text" id="order-search" placeholder="Search by Order ID..."
-                                    oninput="applyOrderFilters()"
-                                    style="width:100%; padding:8px 12px 8px 35px; font-size:0.8rem; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:4px;">
-                                <i data-lucide="search"
-                                    style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:16px; color:var(--text-mono); pointer-events:none;"></i>
-                            </div>
-
-                            <!-- Filter Dropdown -->
-                            <div
-                                style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
-                                FILTER:
-                                <select id="order-filter" onchange="applyOrderFilters()"
-                                    style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
-                                    <option value="all">ALL ORDERS</option>
-                                    <option value="pick-later">PICK LATER</option>
-                                    <option value="delivery-later">DELIVERY LATER</option>
-                                    <option value="aborted">ABORTED</option>
-                                </select>
-                            </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <span class="card-label">Today's Pickup Schedule</span>
+                        <div
+                            style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
+                            AREA:
+                            <select id="schedule-area-filter" onchange="applyScheduleAreaFilter()"
+                                style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
+                                <option value="all">ALL AREAS</option>
+                            </select>
                         </div>
                     </div>
                     <table class="data-table">
@@ -735,221 +816,106 @@
                                 <th>Order ID</th>
                                 <th>Customer</th>
                                 <th>Date</th>
-                                <th>Items</th>
+                                <th>Phone</th>
                                 <th>Address</th>
+                                <th>Items</th>
                                 <th>Total</th>
                                 <th>Status</th>
-                                <th>Protocol</th>
                                 <th>Dtl</th>
                             </tr>
                         </thead>
-                        <tbody id="orders-table-body"></tbody>
+                        <tbody id="schedule-pickup-today-body"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- USERS VIEW -->
-            <div id="view-users" class="hidden reveal">
-                <div class="cellulose-card full-width">
-                    <span class="card-label">User Database</span>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Avatar</th>
-                                <th>Identity</th>
-                                <th>Contact</th>
-                                <th>Location</th>
-                                <th>LTV Value</th>
-                            </tr>
-                        </thead>
-                        <tbody id="users-table-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- PRODUCTS VIEW -->
-            <div id="view-products" class="hidden reveal">
-                <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-                    <button onclick="openProductModal()" class="btn-primary">
-                        <i data-lucide="plus" style="vertical-align:middle; width:16px;"></i> Initiate New Product
-                    </button>
-                </div>
-                <div class="cellulose-card full-width">
-                    <span class="card-label">Product Matrix</span>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Img</th>
-                                <th>Designation</th>
-                                <th>Class</th>
-                                <th>Pricing (Iron/Wash/Dry)</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="product-list-body"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- ADDRESS VIEW -->
-            <div id="view-address" class="hidden reveal">
-                <div style="display:flex; justify-content:flex-end; margin-bottom:20px;">
-                    <button onclick="openAddressModal()" class="btn-primary">
-                        <i data-lucide="plus" style="vertical-align:middle; width:16px;"></i> Add Sector
-                    </button>
-                </div>
-                <div class="cellulose-card full-width">
-                    <span class="card-label">Service Sectors</span>
-                    <div id="address-list-container"
-                        style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;"></div>
-                </div>
-            </div>
-
-            <!-- SCHEDULE VIEW -->
-            <div id="view-schedule" class="hidden reveal">
-                <!-- Tab Navigation -->
-                <div
-                    style="display:flex; gap:15px; margin-bottom:30px; border-bottom:1px solid var(--border); padding-bottom:10px;">
-                    <button id="tab-pickup-today" onclick="switchScheduleTab('pickup-today')"
-                        class="schedule-tab active-tab">
-                        <i data-lucide="package-check" style="width:16px; vertical-align:middle;"></i>
-                        TODAY'S PICKUP
-                    </button>
-                    <button id="tab-delivery-today" onclick="switchScheduleTab('delivery-today')" class="schedule-tab">
-                        <i data-lucide="truck" style="width:16px; vertical-align:middle;"></i>
-                        TODAY'S DELIVERY
-                    </button>
-                    <button id="tab-delivery-tomorrow" onclick="switchScheduleTab('delivery-tomorrow')"
-                        class="schedule-tab">
-                        <i data-lucide="calendar-clock" style="width:16px; vertical-align:middle;"></i>
-                        TOMORROW'S DELIVERY
-                    </button>
-                </div>
-
-                <!-- Schedule Content -->
-                <div id="schedule-content-pickup-today" class="schedule-content">
-                    <div class="cellulose-card full-width">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                            <span class="card-label">Today's Pickup Schedule</span>
-                            <div
-                                style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
-                                AREA:
-                                <select id="schedule-area-filter" onchange="applyScheduleAreaFilter()"
-                                    style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
-                                    <option value="all">ALL AREAS</option>
-                                </select>
-                            </div>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>Items</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Dtl</th>
-                                </tr>
-                            </thead>
-                            <tbody id="schedule-pickup-today-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="schedule-content-delivery-today" class="schedule-content hidden">
-                    <div class="cellulose-card full-width">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                            <span class="card-label">Today's Delivery Schedule</span>
-                            <div
-                                style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
-                                AREA:
-                                <select id="schedule-delivery-today-filter" onchange="applyScheduleAreaFilter()"
-                                    style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
-                                    <option value="all">ALL AREAS</option>
-                                </select>
-                            </div>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>Items</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Dtl</th>
-                                </tr>
-                            </thead>
-                            <tbody id="schedule-delivery-today-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div id="schedule-content-delivery-tomorrow" class="schedule-content hidden">
-                    <div class="cellulose-card full-width">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                            <span class="card-label">Tomorrow's Delivery Schedule</span>
-                            <div
-                                style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
-                                AREA:
-                                <select id="schedule-delivery-tomorrow-filter" onchange="applyScheduleAreaFilter()"
-                                    style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
-                                    <option value="all">ALL AREAS</option>
-                                </select>
-                            </div>
-                        </div>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Date</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>Items</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                    <th>Dtl</th>
-                                </tr>
-                            </thead>
-                            <tbody id="schedule-delivery-tomorrow-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SUPPORT CHATS VIEW -->
-            <div id="view-support" class="hidden reveal">
+            <div id="schedule-content-delivery-today" class="schedule-content hidden">
                 <div class="cellulose-card full-width">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <span class="card-label">Support Messages</span>
+                        <span class="card-label">Today's Delivery Schedule</span>
+                        <div
+                            style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
+                            AREA:
+                            <select id="schedule-delivery-today-filter" onchange="applyScheduleAreaFilter()"
+                                style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
+                                <option value="all">ALL AREAS</option>
+                            </select>
+                        </div>
                     </div>
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>User</th>
-                                <th>Last Message</th>
-                                <th>Time</th>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Items</th>
+                                <th>Total</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Dtl</th>
                             </tr>
                         </thead>
-                        <tbody id="support-chats-body"></tbody>
+                        <tbody id="schedule-delivery-today-body"></tbody>
                     </table>
                 </div>
             </div>
 
-        </main>
-    </div> <!-- End App Content -->>
+            <div id="schedule-content-delivery-tomorrow" class="schedule-content hidden">
+                <div class="cellulose-card full-width">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <span class="card-label">Tomorrow's Delivery Schedule</span>
+                        <div
+                            style="font-family:'JetBrains Mono'; font-size:0.8rem; color:var(--text-mono); white-space:nowrap;">
+                            AREA:
+                            <select id="schedule-delivery-tomorrow-filter" onchange="applyScheduleAreaFilter()"
+                                style="display:inline-block; width:auto; background:transparent; border:none; color:var(--accent); font-weight:bold; padding:0 5px; cursor:pointer;">
+                                <option value="all">ALL AREAS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Phone</th>
+                                <th>Address</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Dtl</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-delivery-tomorrow-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPORT CHATS VIEW -->
+        <div id="view-support" class="hidden reveal">
+            <div class="cellulose-card full-width">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <span class="card-label">Support Messages</span>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Last Message</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="support-chats-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
 
     <!-- MODALS -->
 
@@ -2506,66 +2472,10 @@
             }
         };
 
-        // --- Authentication ---
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDiv = document.getElementById('login-error');
-
-            errorDiv.style.display = 'none';
-            errorDiv.innerText = '';
-
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Signed in
-                    console.log("Authenticated");
-                })
-                .catch((error) => {
-                    console.error(error);
-                    errorDiv.innerText = "ACCESS DENIED: " + error.message;
-                    errorDiv.style.display = 'block';
-                });
-        }
-
-        function handleLogout() {
-            firebase.auth().signOut().then(() => {
-                console.log("Session Terminated");
-            }).catch((error) => {
-                console.error(error);
-            });
-        }
-
-        // Auth State Observer
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in
-                document.getElementById('login-screen').style.display = 'none';
-                const appContent = document.getElementById('app-content');
-                appContent.style.display = 'flex'; // Restore flex layout
-
-                // Initialize Data
-                if (ordersData.length === 0) { // Prevent double-fetch
-                    initCharts();
-                    fetchData();
-                    adminChat.loadChats();
-                }
-            } else {
-                // User is signed out
-                document.getElementById('login-screen').style.display = 'flex';
-                document.getElementById('app-content').style.display = 'none';
-
-                // Clear Sensitive Data from UI (Optional, but good practice)
-                ordersData = [];
-                usersData = [];
-                updateUI();
-            }
-        });
-
-        // Start (Removed auto-start, now driven by Auth State)
-        // initCharts();
-        // fetchData();
-        // adminChat.loadChats(); 
+        // Start
+        initCharts();
+        fetchData();
+        adminChat.loadChats(); // Load support chats (Initial Empty)
 
     </script>
 </body>
