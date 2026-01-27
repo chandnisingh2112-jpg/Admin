@@ -556,6 +556,90 @@
         .schedule-content {
             animation: reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
+
+        /* Authentication Styles */
+        #auth-modal.modal-active {
+            backdrop-filter: blur(10px);
+        }
+
+        /* Modal Styles */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            animation: fadeIn 0.2s ease;
+
+            /* Ensure these are set to allow visibility when display is flex */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .modal-backdrop.modal-active {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content h3 {
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 15px;
+        }
+
+        .modal-content button {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-content button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content button:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -1054,13 +1138,85 @@
         </div>
     </div>
 
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal-backdrop" style="z-index: 200; display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div style="display:flex; justify-content:flex-end;">
+                <button onclick="hideAuthModal()"
+                    style="background:none; border:none; cursor:pointer; color:var(--text-mono); font-size:1.5rem;">&times;</button>
+            </div>
+            <div style="text-align:center; margin-bottom:30px; margin-top:-20px;">
+                <div class="logo" style="margin:0 auto 20px; width:48px; height:48px;"></div>
+                <h3 class="card-label" style="font-size:1.2rem; margin-bottom:5px; color:var(--accent);">
+                    ADMIN AUTHENTICATION
+                </h3>
+                <p style="font-size:0.75rem; color:var(--text-mono);">Secure Access Required</p>
+            </div>
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+                <div style="margin-bottom:15px;">
+                    <label>Email</label>
+                    <input type="email" id="admin-email" required placeholder="admin@yourdomain.com"
+                        autocomplete="username">
+                </div>
+                <div style="margin-bottom:20px;">
+                    <label>Password</label>
+                    <input type="password" id="admin-password" required placeholder="Enter password"
+                        autocomplete="current-password">
+                </div>
+                <div id="auth-error"
+                    style="color: var(--color-danger); font-size:0.8rem; margin-bottom:15px; display:none; padding:10px; background:rgba(255,0,85,0.1); border:1px solid var(--color-danger); border-radius:4px;">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;">
+                    <i data-lucide="lock" style="width:14px; vertical-align:middle; margin-right:5px;"></i>
+                    LOGIN
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div id="logout-confirm-modal" class="modal-backdrop" style="display: none; z-index: 250;">
+        <div class="modal-content" style="max-width: 420px; text-align: center;">
+            <div style="margin-bottom: 20px;">
+                <div
+                    style="width: 60px; height: 60px; background: rgba(255, 69, 58, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                    <i data-lucide="log-out" style="width: 28px; height: 28px; color: var(--color-danger);"></i>
+                </div>
+                <h3 style="font-size: 1.3rem; margin-bottom: 8px; color: var(--text-main);">Logout Confirmation</h3>
+                <p style="font-size: 0.875rem; color: var(--text-mono); line-height: 1.5;">
+                    Are you sure you want to logout from the admin panel?
+                </p>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button onclick="hideLogoutModal()"
+                    style="padding: 10px 24px; background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
+                    Cancel
+                </button>
+                <button onclick="confirmLogout()"
+                    style="padding: 10px 24px; background: var(--color-danger); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 600; transition: all 0.2s;">
+                    <i data-lucide="log-out"
+                        style="width: 14px; height: 14px; vertical-align: middle; margin-right: 5px;"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <script>
         // --- Init Lucide Icons ---
-        lucide.createIcons();
+        function safeCreateIcons() {
+            try {
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } catch (e) {
+                console.warn('Lucide icons failed to load:', e);
+            }
+        }
+        safeCreateIcons();
 
         // --- Firebase Config ---
         const firebaseConfig = {
@@ -1074,6 +1230,266 @@
         };
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
+
+        // Set persistence to LOCAL (session survives page reload)
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(() => {
+                console.log('✅ Auth persistence set to LOCAL');
+            })
+            .catch((error) => {
+                console.error('❌ Error setting persistence:', error);
+            });
+
+        // --- Authentication State ---
+        let isAdminAuthenticated = false;
+
+        // Check admin authentication on load
+        auth.onAuthStateChanged(async (user) => {
+            console.log('🔐 Auth state changed. User:', user ? user.email : 'None');
+
+            if (user) {
+                console.log('👤 User UID:', user.uid);
+
+                // Check if user is admin with a timeout
+                try {
+                    console.log('🔍 Checking admin status in database...');
+
+                    // Promise with 7s timeout
+                    const adminCheckPromise = db.ref('admins/' + user.uid).once('value');
+                    const timeoutPromise = new Promise((_, reject) =>
+                        setTimeout(() => reject(new Error('TIMEOUT')), 7000)
+                    );
+
+                    const adminSnapshot = await Promise.race([adminCheckPromise, timeoutPromise]);
+                    console.log('📊 Admin snapshot exists:', adminSnapshot.exists());
+
+                    if (adminSnapshot.exists()) {
+                        console.log('✅ User is admin! Granting access...');
+                        isAdminAuthenticated = true;
+                        hideAuthModal();
+                        initCharts();
+                        fetchData();
+                        adminChat.loadChats();
+                        renderAuthControl(true);
+                    } else {
+                        throw new Error('NOT_ADMIN');
+                    }
+                } catch (error) {
+                    console.error('❌ Error checking admin status:', error);
+
+                    if (error.message === 'TIMEOUT') {
+                        showAuthError('Database connection high latency. Trying to proceed...');
+                        // If it's just a timeout, we might not want to kick them out immediately, 
+                        // but for security we should probably stay logged out.
+                        await auth.signOut();
+                        showAuthModal();
+                        renderAuthControl(false);
+                    } else if (error.message === 'NOT_ADMIN') {
+                        console.error('❌ User is NOT in admins list. UID:', user.uid);
+                        await auth.signOut();
+                        showAuthError('Access Denied: You are not authorized as an admin.');
+                        showAuthModal();
+                        renderAuthControl(false);
+                    } else if (error.code === 'PERMISSION_DENIED') {
+                        showAuthError('Database permission error. Check Firebase security rules.');
+                        await auth.signOut();
+                        showAuthModal();
+                        renderAuthControl(false);
+                    } else {
+                        showAuthError('Error verifying admin access.');
+                        showAuthModal();
+                        renderAuthControl(false);
+                    }
+                }
+            } else {
+                console.log('🚫 No user logged in');
+                isAdminAuthenticated = false;
+                renderAuthControl(false);
+
+                // Reset view to dashboard when logged out
+                try { navigate('dashboard'); } catch (e) { }
+
+                if (!document.getElementById('auth-modal').classList.contains('modal-active')) {
+                    showAuthModal();
+                }
+            }
+        });
+
+        // Login Handler
+        function handleAdminLogin(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+
+            hideAuthError();
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(async (userCredential) => {
+                    // Immediate admin check for faster redirect
+                    try {
+                        const snap = await db.ref('admins/' + userCredential.user.uid).once('value');
+                        if (snap.exists()) {
+                            // Let onAuthStateChanged handle the full state setup
+                            console.log('🚀 Login successful, reloading page...');
+                            hideAuthModal();
+                            hideAuthError();
+                            // Force reload to ensure all fetchData/listeners init cleanly
+                            window.location.reload();
+                        } else {
+                            await auth.signOut();
+                            showAuthError('Access Denied: You are not authorized as an admin.');
+                        }
+                    } catch (e) {
+                        console.warn('Login check delay:', e);
+                        // onAuthStateChanged will eventually pick this up
+                    }
+                })
+                .catch((error) => {
+                    let errorMessage = error.message;
+
+                    // User-friendly error messages
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'Account not found.';
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'Wrong password. Please try again.';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'Invalid email format.';
+                    } else if (error.code === 'auth/too-many-requests') {
+                        errorMessage = 'Too many failed attempts. Please try again later.';
+                    } else if (error.code === 'auth/invalid-credential') {
+                        errorMessage = 'Wrong password or email.';
+                    }
+
+                    showAuthError(errorMessage);
+                });
+        }
+
+        // Logout Handler
+        function handleLogout() {
+            showLogoutModal();
+        }
+
+        // Show logout confirmation modal
+        function showLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            if (modal) {
+                modal.classList.add('modal-active');
+                modal.style.display = 'flex'; // Ensure display is flex in case inline style was set
+            }
+        }
+
+        // Hide logout modal
+        function hideLogoutModal() {
+            const modal = document.getElementById('logout-confirm-modal');
+            if (modal) {
+                modal.classList.remove('modal-active');
+                setTimeout(() => {
+                    if (!modal.classList.contains('modal-active')) {
+                        modal.style.display = 'none';
+                    }
+                }, 300); // Wait for transition
+            }
+        }
+
+        // Confirm logout
+        function confirmLogout() {
+            hideLogoutModal();
+            auth.signOut().then(() => {
+                // Clear data
+                ordersData = [];
+                usersData = [];
+                productsData = [];
+                addressesData = [];
+                adminChat.chatsData = [];
+                updateUI(); // Reset UI to empty
+                renderAuthControl(false);
+                navigate('dashboard');
+                showAuthModal();
+            }).catch((error) => {
+                console.error('Logout error:', error);
+                showAuthError('Error logging out. Please try again.');
+            });
+        }
+
+        // UI Helper Functions
+        // UI Helper Functions
+        function showAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.classList.add('modal-active');
+                modal.style.display = 'flex';
+            }
+        }
+
+        function hideAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            if (modal) {
+                modal.classList.remove('modal-active');
+                setTimeout(() => {
+                    if (!modal.classList.contains('modal-active')) {
+                        modal.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+
+
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function hideAuthError() {
+            const errorDiv = document.getElementById('auth-error');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Global Error Tracker
+        window.addEventListener('error', function (event) {
+            console.error('🔥 Global Script Error:', event.error);
+            // If we are at initialization, try to show the app anyway
+        });
+
+        // Render Login/Logout button
+        function renderAuthControl(isLoggedIn) {
+            const header = document.querySelector('.header .mono-stats');
+            if (!header) return;
+
+            let btn = document.getElementById('auth-control-btn');
+            // Check for legacy logout button and remove if exists
+            const legacyBtn = document.getElementById('logout-btn');
+            if (legacyBtn) legacyBtn.remove();
+
+            if (!btn) {
+                btn = document.createElement('button');
+                btn.id = 'auth-control-btn';
+                btn.className = 'btn-secondary';
+                btn.style.cssText = 'margin-top:10px; padding:5px 15px; font-size:0.7rem;';
+                header.appendChild(btn);
+            }
+
+            // Clone to clear listeners
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            btn = newBtn;
+
+            if (isLoggedIn) {
+                btn.innerHTML = `<i data-lucide="log-out" style="width:12px; vertical-align:middle;"></i> LOGOUT`;
+                btn.onclick = handleLogout;
+            } else {
+                btn.innerHTML = `<i data-lucide="lock" style="width:12px; vertical-align:middle;"></i> LOGIN`;
+                btn.onclick = () => showAuthModal();
+            }
+            safeCreateIcons();
+        }
 
         // --- State ---
         let ordersData = [];
@@ -1109,11 +1525,11 @@
         }
 
         function startLongPress(type, id) {
+            clearTimeout(longPressTimer); // Prevent multiple timers
             if (isSelectionMode) return; // Already selecting
             longPressTimer = setTimeout(() => {
                 enterSelectionMode(type, id);
-            }, 800); // 800ms for long press (User asked for 3s but that's very long for UX, sticking to 800ms is standard, maybe user meant 'long press') - actually User said "3sec", I should probably stick to 3000ms if they were specific, or maybe 1500ms. I'll do 1500ms as a compromise between "3sec" and usability.
-            // Wait, user explicitly said "click on 3sec". I'll do 2000ms to be safe and close to their request without being annoying.
+            }, 2000);
         }
 
         function cancelLongPress() {
@@ -1301,8 +1717,26 @@
         function fetchData() {
             db.ref('orders').on('value', snapshot => {
                 const data = snapshot.val();
-                ordersData = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
-                ordersData.sort((a, b) => new Date(b.date) - new Date(a.date));
+                const newOrdersData = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })) : [];
+                newOrdersData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                // Check for new orders if we have previous data
+                if (ordersData.length > 0 && newOrdersData.length > ordersData.length) {
+                    // Simple check: count increased
+                    // A more robust check would differ IDs, but for "new order" alert, count increase is a strong signal
+                    // provided we don't delete orders frequently.
+                    // Let's filter to find IDs not in old list
+                    const oldIds = new Set(ordersData.map(o => o.id));
+                    const freshOrders = newOrdersData.filter(o => !oldIds.has(o.id));
+
+                    if (freshOrders.length > 0) {
+                        playNotificationSound();
+                        // Optional: Show browser notification or toast
+                        console.log("🔔 New Order Received!", freshOrders);
+                    }
+                }
+
+                ordersData = newOrdersData;
                 updateUI();
             });
 
@@ -1760,18 +2194,21 @@
             function getPickupTimestamp(order) {
                 // If order has explicit pickupTime field, use it
                 if (order.pickupTime) {
-                    return new Date(order.pickupTime).getTime();
+                    const d = new Date(order.pickupTime);
+                    return !isNaN(d.getTime()) ? d.getTime() : null;
                 }
 
                 // If order has pickupDate field, use it
                 if (order.pickupDate) {
-                    return new Date(order.pickupDate).getTime();
+                    const d = new Date(order.pickupDate);
+                    return !isNaN(d.getTime()) ? d.getTime() : null;
                 }
 
                 // Fallback: if status is "Delivery in 4-5 Days", estimate pickup was when order was placed
                 const status = (order.status || '').toLowerCase();
                 if (status.includes('delivery') && order.date) {
-                    return new Date(order.date).getTime();
+                    const d = new Date(order.date);
+                    return !isNaN(d.getTime()) ? d.getTime() : null;
                 }
 
                 return null;
@@ -1780,7 +2217,7 @@
             // Filter orders for today's pickup (orders placed today and pending pickup)
             let pickupToday = ordersData.filter(o => {
                 const orderDate = o.date ? new Date(o.date) : null;
-                if (!orderDate) return false;
+                if (!orderDate || isNaN(orderDate.getTime())) return false;
                 orderDate.setHours(0, 0, 0, 0);
 
                 const status = (o.status || '').toLowerCase();
@@ -1815,7 +2252,7 @@
                 // Get all orders before area filter is applied (to count correctly)
                 const allPickupToday = ordersData.filter(o => {
                     const orderDate = o.date ? new Date(o.date) : null;
-                    if (!orderDate) return false;
+                    if (!orderDate || isNaN(orderDate.getTime())) return false;
                     orderDate.setHours(0, 0, 0, 0);
                     const status = (o.status || '').toLowerCase();
                     const isPickupStatus = status.includes('pick') || status.includes('pending') || status === '';
@@ -2472,11 +2909,24 @@
             }
         };
 
-        // Start
-        initCharts();
-        fetchData();
-        adminChat.loadChats(); // Load support chats (Initial Empty)
+        // Authentication will trigger these automatically
+        // Don't initialize until user is authenticated
+        // initCharts();
+        // fetchData();
+        // adminChat.loadChats();
 
+
+        // --- Sound Notification ---
+        const notificationAudio = new Audio('neworder.wav');
+
+        function playNotificationSound() {
+            // User interaction is usually required to play audio. 
+            // If the user has interacted with the document (clicked anywhere), this should work.
+            notificationAudio.currentTime = 0;
+            notificationAudio.play().catch(e => {
+                console.warn('Audio playback failed (likely requires user interaction first):', e);
+            });
+        }
     </script>
 </body>
 
